@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_day"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_normal_day_view"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        tools:text="3">
+
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/layout_events"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/img_event_ptm"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:src="@drawable/ic_circle_ptm"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/img_event_field_trip"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:src="@drawable/ic_circle_field_trip"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/img_event_remainder"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:src="@drawable/ic_circle_remainder"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</LinearLayout>

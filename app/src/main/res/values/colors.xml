@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="caldroid_white">#FFFFFF</color>
+    <color name="caldroid_black">#000000</color>
+    <color name="caldroid_transparent">#00000000</color>
+    <!-- For settings framework -->
+    <color name="caldroid_lighter_gray">#FFFFFF</color>
+    <color name="caldroid_gray">#CCC</color>
+    <color name="caldroid_darker_gray">#aaa</color>
+    <color name="caldroid_middle_gray">#888</color>
+    <!-- A light Holo shade of blue -->
+    <color name="caldroid_holo_blue_light">#ff33b5e5</color>
+    <!-- A dark Holo shade of blue -->
+    <color name="caldroid_holo_blue_dark">#ff0099cc</color>
+    <!-- A really bright Holo shade of blue -->
+    <color name="caldroid_sky_blue">#FFA3E8F7</color>
+
+    <color name="caldroid_333">#333</color>
+    <color name="caldroid_555">#555</color>
+    <color name="caldroid_light_red">#ff7f7f</color>
+
+    <color name="green">#8FCC85</color>
+    <color name="blue">#ff33b5e5</color>
+    <color name="white">#ffffff</color>
+
+    <color name="ptm">#f1d839</color>
+    <color name="field_trip">#a2fff9</color>
+    <color name="remainder">#16e251</color>
+
+</resources>
