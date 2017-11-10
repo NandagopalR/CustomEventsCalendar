@@ -11,6 +11,8 @@ public class EventsItem {
     private boolean isRemainder;
     private boolean isHalfHoliday;
     private boolean isFullHoliday;
+    private boolean hasHoliday;
+    private boolean hasEvents;
 
     public EventsItem(boolean isPtm, boolean isFieldTrip, boolean isRemainder, boolean isHalfHoliday, boolean isFullHoliday) {
         this.isPtm = isPtm;
@@ -18,6 +20,32 @@ public class EventsItem {
         this.isRemainder = isRemainder;
         this.isHalfHoliday = isHalfHoliday;
         this.isFullHoliday = isFullHoliday;
+        hasHoliday = isHolidayAvailable();
+        hasEvents = isEventsAvailable();
+    }
+
+    private boolean isHolidayAvailable() {
+        return isHalfHoliday || isFullHoliday ? true : false;
+    }
+
+    private boolean isEventsAvailable() {
+        return isPtm || isFieldTrip || isRemainder ? true : false;
+    }
+
+    public boolean hasHoliday() {
+        return hasHoliday;
+    }
+
+    public void setHasHoliday(boolean hasHoliday) {
+        this.hasHoliday = hasHoliday;
+    }
+
+    public boolean hasEvents() {
+        return hasEvents;
+    }
+
+    public void setHasEvents(boolean hasEvents) {
+        this.hasEvents = hasEvents;
     }
 
     public boolean isPtm() {

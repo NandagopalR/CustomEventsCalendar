@@ -336,7 +336,7 @@ public class CalendarFragment extends DialogFragment implements MonthListAdapter
                     // Update current date time of the selected page
                     setCalendarDateTime(currentDateTime);
                 }
-            }, 300);
+            }, 200);
         }
 
     }

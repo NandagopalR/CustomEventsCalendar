@@ -73,7 +73,7 @@ public class VerticalMonthActivity extends BaseActivity {
             public void run() {
                 caldroidFragment.refreshEventsView();
             }
-        }, 1200);
+        }, 500);
 
     }
 

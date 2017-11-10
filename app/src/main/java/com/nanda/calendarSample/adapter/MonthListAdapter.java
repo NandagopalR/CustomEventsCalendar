@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nanda.calendarSample.R;
@@ -104,12 +105,20 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
         TextView tvDay;
         @BindView(R.id.layout_events)
         LinearLayout layoutEvent;
+        @BindView(R.id.layout_holidays)
+        LinearLayout layoutHolidays;
+        @BindView(R.id.layout_event_holiday)
+        RelativeLayout layoutEventHoliday;
         @BindView(R.id.img_event_ptm)
         ImageView imgPtm;
         @BindView(R.id.img_event_field_trip)
         ImageView imgFieldTrip;
         @BindView(R.id.img_event_remainder)
         ImageView imgRemainder;
+        @BindView(R.id.img_half_holiday)
+        ImageView imgHalfHoliday;
+        @BindView(R.id.img_full_holiday)
+        ImageView imgFullHoliday;
 
         public MonthViewHolder(View itemView) {
             super(itemView);
@@ -139,37 +148,36 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
                     EventsItem eventsItem = itemMap.get(item);
                     if (eventsItem != null) {
 
-                        if (eventsItem.isHalfHoliday()) {
-                            tvDay.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_half_circle_holiday));
-                        } else if (eventsItem.isFullHoliday()) {
-                            tvDay.setBackground(ContextCompat.getDrawable(context, R.drawable.bg_circle_full_holiday));
-                            tvDay.setTextColor(ContextCompat.getColor(context, android.R.color.white));
-                        }
-
-                        if (!eventsItem.isPtm() && !eventsItem.isFieldTrip() && !eventsItem.isFieldTrip()) {
+                        if (eventsItem.hasHoliday()) {
+                            layoutEventHoliday.setVisibility(View.VISIBLE);
+                            layoutHolidays.setVisibility(View.VISIBLE);
                             layoutEvent.setVisibility(View.GONE);
-                        } else {
+
+                            imgHalfHoliday.setVisibility(eventsItem.isHalfHoliday() ? View.VISIBLE : View.GONE);
+                            imgFullHoliday.setVisibility(eventsItem.isFullHoliday() ? View.VISIBLE : View.GONE);
+
+                        } else if (eventsItem.hasEvents()) {
+                            layoutEventHoliday.setVisibility(View.VISIBLE);
                             layoutEvent.setVisibility(View.VISIBLE);
-                            if (eventsItem.isPtm()) {
-                                imgPtm.setVisibility(View.VISIBLE);
-                            } else {
-                                imgPtm.setVisibility(View.GONE);
-                            }
-                            if (eventsItem.isFieldTrip()) {
-                                imgFieldTrip.setVisibility(View.VISIBLE);
-                            } else {
-                                imgFieldTrip.setVisibility(View.GONE);
-                            }
-                            if (eventsItem.isRemainder()) {
-                                imgRemainder.setVisibility(View.VISIBLE);
-                            } else {
-                                imgRemainder.setVisibility(View.GONE);
-                            }
+                            layoutHolidays.setVisibility(View.GONE);
+
+                            imgPtm.setVisibility(eventsItem.isPtm() ? View.VISIBLE : View.GONE);
+                            imgFieldTrip.setVisibility(eventsItem.isFieldTrip() ? View.VISIBLE : View.GONE);
+                            imgRemainder.setVisibility(eventsItem.isRemainder() ? View.VISIBLE : View.GONE);
+
+                        } else {
+                            layoutEventHoliday.setVisibility(View.INVISIBLE);
                         }
 
+                    } else {
+                        layoutEventHoliday.setVisibility(View.INVISIBLE);
                     }
 
+                } else {
+                    layoutEventHoliday.setVisibility(View.INVISIBLE);
                 }
+            } else {
+                layoutEventHoliday.setVisibility(View.INVISIBLE);
             }
         }
 
