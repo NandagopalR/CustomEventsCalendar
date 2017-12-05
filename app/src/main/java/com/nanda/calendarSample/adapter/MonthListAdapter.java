@@ -38,6 +38,7 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
     private DateTime minDateTime;
     private DateTime maxDateTime;
     private DateTime today;
+    private int mSelectedItem;
 
     public static int
             SUNDAY = 1,
@@ -73,7 +74,7 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
         this.extraData = extraData;
         this.dateClickListener = dateClickListener;
         inflater = LayoutInflater.from(context);
-
+        mSelectedItem = -1;
         populateFromCaldroidData();
 
     }
@@ -91,7 +92,7 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
     @Override
     public void onBindViewHolder(MonthViewHolder holder, int position) {
         DateTime item = datetimeList.get(position);
-        holder.bindDataToView(item);
+        holder.bindDataToView(item, position);
     }
 
     @Override
@@ -125,7 +126,12 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
             ButterKnife.bind(this, itemView);
         }
 
-        public void bindDataToView(DateTime item) {
+        public void bindDataToView(DateTime item, int position) {
+
+            if (position == mSelectedItem) {
+                tvDay.setBackgroundResource(R.drawable.bg_selected_view);
+                mSelectedItem = -1;
+            } else tvDay.setBackgroundResource(R.drawable.bg_normal_day_view);
 
             if (item.equals(getToday())) {
                 tvDay.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
@@ -193,6 +199,8 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
                 DateTime item = datetimeList.get(position);
                 dateClickListener.onDayClicked(item);
             }
+            mSelectedItem = position;
+            notifyItemRangeChanged(0, datetimeList.size());
         }
 
     }

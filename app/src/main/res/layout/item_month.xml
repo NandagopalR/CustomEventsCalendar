@@ -48,7 +48,7 @@
                 android:id="@+id/img_full_holiday"
                 android:layout_width="8dp"
                 android:layout_height="8dp"
-                android:src="@drawable/ic_full_holiday"
+                android:src="@drawable/ic_circle_full_holiday"
                 android:visibility="gone" />
 
         </LinearLayout>
@@ -64,21 +64,21 @@
                 android:id="@+id/img_event_ptm"
                 android:layout_width="8dp"
                 android:layout_height="8dp"
-                android:src="@drawable/ic_circle_ptm"
+                android:src="@drawable/ic_circle_ptm_grediant"
                 android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/img_event_field_trip"
                 android:layout_width="8dp"
                 android:layout_height="8dp"
-                android:src="@drawable/ic_circle_field_trip"
+                android:src="@drawable/ic_circle_field_trip_grediant"
                 android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/img_event_remainder"
                 android:layout_width="8dp"
                 android:layout_height="8dp"
-                android:src="@drawable/ic_circle_remainder"
+                android:src="@drawable/ic_circle_remainder_grediant"
                 android:visibility="gone" />
 
         </LinearLayout>
