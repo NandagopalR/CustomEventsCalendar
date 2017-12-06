@@ -129,9 +129,9 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
         public void bindDataToView(DateTime item, int position) {
 
             if (position == mSelectedItem) {
-                tvDay.setBackgroundResource(R.drawable.bg_selected_view);
+                tvDay.setBackgroundResource(R.drawable.ic_days_selected);
                 mSelectedItem = -1;
-            } else tvDay.setBackgroundResource(R.drawable.bg_normal_day_view);
+            } else tvDay.setBackgroundResource(R.drawable.ic_days_unselected);
 
             if (item.equals(getToday())) {
                 tvDay.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));

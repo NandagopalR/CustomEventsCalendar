@@ -11,10 +11,10 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/bg_normal_day_view"
+        android:background="@drawable/ic_days_unselected"
         android:gravity="center"
+        android:maxLength="2"
         android:orientation="vertical"
-        android:padding="5dp"
         android:textColor="@android:color/black"
         android:textSize="14sp"
         tools:text="3">
@@ -39,16 +39,16 @@
 
             <ImageView
                 android:id="@+id/img_half_holiday"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:src="@drawable/bg_circle_test"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:src="@drawable/ic_holiday_half"
                 android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/img_full_holiday"
-                android:layout_width="8dp"
+                android:layout_width="5dp"
                 android:layout_height="8dp"
-                android:src="@drawable/ic_circle_full_holiday"
+                android:src="@drawable/ic_holiday_full"
                 android:visibility="gone" />
 
         </LinearLayout>
@@ -62,23 +62,23 @@
 
             <ImageView
                 android:id="@+id/img_event_ptm"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:src="@drawable/ic_circle_ptm_grediant"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:src="@drawable/ic_event_ptm"
                 android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/img_event_field_trip"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:src="@drawable/ic_circle_field_trip_grediant"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:src="@drawable/ic_event_field_trip"
                 android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/img_event_remainder"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:src="@drawable/ic_circle_remainder_grediant"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:src="@drawable/ic_event_remainder"
                 android:visibility="gone" />
 
         </LinearLayout>

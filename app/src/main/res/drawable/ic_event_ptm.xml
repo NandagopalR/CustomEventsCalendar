@@ -3,12 +3,12 @@
     android:shape="oval">
 
     <size
-        android:width="10dp"
-        android:height="10dp" />
+        android:width="5dp"
+        android:height="5dp" />
 
     <gradient
-        android:endColor="#7CFFB9"
-        android:startColor="#7CFFB9"
+        android:endColor="#f1d839"
+        android:startColor="#EFC70E"
         android:type="linear" />
 
 </shape>
