@@ -6,13 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 
 import com.nanda.calendarSample.R;
 import com.nanda.calendarSample.activity.monthpager.MonthAdapter;
-import com.nanda.calendarSample.adapter.MonthTestAdapter;
+import com.nanda.calendarSample.adapter.CalendarMonthPagerAdapter;
 import com.nanda.calendarSample.base.BaseActivity;
+import com.nanda.calendarSample.data.entity.CalendarMonthItem;
 import com.nanda.calendarSample.data.entity.MonthItem;
 import com.nanda.calendarSample.data.mapper.MonthMapper;
 
@@ -34,13 +33,15 @@ public class MonthNameActivity extends BaseActivity {
     @BindView(R.id.pager)
     ViewPager pager;
     @BindView(R.id.viewpager)
-    ViewPager viewPager;
+    ViewPager monthPager;
 
     private List<MonthItem> monthList;
+    private List<CalendarMonthItem> calendarMonthItemList;
 
     private MonthAdapter adapter;
-    private MonthTestAdapter monthTestAdapter;
+    private CalendarMonthPagerAdapter pagerAdapter;
     private int curYear;
+    private int curMonth;
 
     public static Intent getCallingIntent(Context context) {
         return new Intent(context, MonthNameActivity.class);
@@ -54,13 +55,79 @@ public class MonthNameActivity extends BaseActivity {
 
         Calendar calendar = Calendar.getInstance();
         curYear = calendar.get(Calendar.YEAR);
+        curMonth = (calendar.get(Calendar.MONTH) + 1);
 
         adapter = new MonthAdapter(getSupportFragmentManager());
-        monthTestAdapter = new MonthTestAdapter(getSupportFragmentManager());
+        pagerAdapter = new CalendarMonthPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
-        viewPager.setAdapter(monthTestAdapter);
+        monthPager.setAdapter(pagerAdapter);
+        monthPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        setPageListener();
+            }
+
+            @Override
+            public void onPageSelected(final int position) {
+
+                if (position == 0) {
+                    Log.e(TAG, "" + position);
+                    int currentYear = calendarMonthItemList.get(position).getYear();
+                    List<CalendarMonthItem> prevMonthList = MonthMapper.convertModelToMonthEntityList(currentYear - 1);
+
+                    int prevMonthYear = prevMonthList.get(0).getYear();
+
+                    if (prevMonthYear == currentYear)
+                        return;
+
+                    List<CalendarMonthItem> currentMonthList = new ArrayList<>();
+                    currentMonthList.addAll(calendarMonthItemList);
+
+                    calendarMonthItemList.clear();
+                    calendarMonthItemList.addAll(prevMonthList);
+                    calendarMonthItemList.addAll(currentMonthList);
+                    pagerAdapter.setCalendarMonthItemList(calendarMonthItemList);
+//
+                    monthPager.postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            monthPager.setCurrentItem(12, false);
+                        }
+                    }, 200);
+                } else if (position > (calendarMonthItemList.size() - 5)) {
+                    CalendarMonthItem selectedItem = calendarMonthItemList.get(position);
+                    int currentYear = calendarMonthItemList.get(calendarMonthItemList.size() - 5).getYear();
+                    List<CalendarMonthItem> nextMonthsList = MonthMapper.convertModelToMonthEntityList(currentYear + 1);
+
+                    int nextMonthYear = nextMonthsList.get(0).getYear();
+
+                    if (nextMonthYear == currentYear)
+                        return;
+
+                    calendarMonthItemList.addAll(nextMonthsList);
+                    pagerAdapter.setCalendarMonthItemList(calendarMonthItemList);
+                    int selectedPosition = pagerAdapter.getCalendarPosition(selectedItem.getId());
+                    if (selectedPosition < 0)
+                        return;
+                    monthPager.setCurrentItem(selectedPosition);
+                } else {
+                    monthPager.postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            pager.setCurrentItem(position, true);
+                        }
+                    }, 100);
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -69,7 +136,7 @@ public class MonthNameActivity extends BaseActivity {
             }
 
             @Override
-            public void onPageSelected(int position) {
+            public void onPageSelected(final int position) {
                 if (position == 0) {
                     Log.e(TAG, "" + position);
                     int currentYear = monthList.get(position).getYear();
@@ -112,6 +179,14 @@ public class MonthNameActivity extends BaseActivity {
                     if (selectedPosition < 0)
                         return;
                     pager.setCurrentItem(selectedPosition);
+                } else {
+                    pager.postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            monthPager.setCurrentItem(position, true);
+                        }
+                    }, 100);
                 }
             }
 
@@ -121,26 +196,12 @@ public class MonthNameActivity extends BaseActivity {
             }
         });
         monthList = getCurrentMonths(curYear);
+        calendarMonthItemList = MonthMapper.convertModelToMonthEntityList(curYear);
         adapter.setDateTimeList(monthList);
-        monthTestAdapter.setDateTimeList(monthList);
+        pagerAdapter.setCalendarMonthItemList(calendarMonthItemList);
 
-    }
-
-    private void setPageListener() {
-        pager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                viewPager.onTouchEvent(event);
-                return false;
-            }
-        });
-        viewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                pager.onTouchEvent(event);
-                return false;
-            }
-        });
+        pager.setCurrentItem(curMonth);
+        monthPager.setCurrentItem(curMonth);
 
     }
 
@@ -149,5 +210,4 @@ public class MonthNameActivity extends BaseActivity {
         List<MonthItem> monthList = MonthMapper.convertModelToEntityList(symbols.getMonths(), year);
         return monthList;
     }
-
 }

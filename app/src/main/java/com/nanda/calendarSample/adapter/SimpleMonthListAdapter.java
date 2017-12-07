@@ -18,6 +18,8 @@ import com.nanda.calendarSample.utils.CalendarUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -25,60 +27,61 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hirondelle.date4j.DateTime;
 
-/**
- * Created by Nandagopal on 10/27/2017.
- */
-
-public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.MonthViewHolder> {
+public class SimpleMonthListAdapter extends RecyclerView.Adapter<SimpleMonthListAdapter.MonthViewHolder> {
 
     private Context context;
     private ArrayList<DateTime> datetimeList;
     private int month;
     private int year;
     private DateTime today;
-    private int mSelectedItem;
+    private int mSelectedItem = -1;
 
-    public static int SUNDAY = 1;
+    private static int SUNDAY = 1;
 
     private LayoutInflater inflater;
     /**
      * caldroidData belongs to Caldroid
      */
     private Map<String, Object> caldroidData;
-    /**
-     * extraData belongs to client
-     */
-    private Map<String, Object> extraData;
 
-    private DateClickListener dateClickListener;
+    private SimpleMonthListAdapter.DateClickListener dateClickListener;
 
 
-    public MonthListAdapter(Context context, int month, int year, Map<String, Object> caldroidData,
-                            Map<String, Object> extraData, DateClickListener dateClickListener) {
+    public SimpleMonthListAdapter(Context context, int month, int year, SimpleMonthListAdapter.DateClickListener dateClickListener) {
         this.context = context;
         this.month = month;
         this.year = year;
-        this.caldroidData = caldroidData;
-        this.extraData = extraData;
+        this.caldroidData = new HashMap<>();
         this.dateClickListener = dateClickListener;
         inflater = LayoutInflater.from(context);
-        mSelectedItem = -1;
-        populateFromCaldroidData();
+        datetimeList = new ArrayList<>();
+    }
 
+    public void setDatetimeList(List<DateTime> datetimeItemList, Map<String, Object> eventData) {
+        if (datetimeItemList == null) {
+            return;
+        }
+        datetimeList.clear();
+        datetimeList.addAll(datetimeItemList);
+        notifyDataSetChanged();
     }
 
     public interface DateClickListener {
         void onDayClicked(DateTime item);
     }
 
-    @Override
-    public MonthViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_month, parent, false);
-        return new MonthViewHolder(view);
+    public void updateToday() {
+        today = CalendarUtils.convertDateToDateTime(new Date());
     }
 
     @Override
-    public void onBindViewHolder(MonthViewHolder holder, int position) {
+    public SimpleMonthListAdapter.MonthViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.item_month, parent, false);
+        return new SimpleMonthListAdapter.MonthViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(SimpleMonthListAdapter.MonthViewHolder holder, int position) {
         DateTime item = datetimeList.get(position);
         holder.bindDataToView(item, position);
     }
@@ -192,55 +195,11 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
 
     }
 
-    public void setAdapterDateTime(DateTime dateTime) {
-        this.month = dateTime.getMonth();
-        this.year = dateTime.getYear();
-        this.datetimeList = CalendarUtils.getFullWeeks(this.month, this.year,
-                SUNDAY, true);
-    }
-
-    public Map<String, Object> getCaldroidData() {
-        return caldroidData;
-    }
-
-    public void setCaldroidData(Map<String, Object> caldroidData) {
-        this.caldroidData = caldroidData;
-
-        // Reset parameters
-        populateFromCaldroidData();
-    }
-
-    public Map<String, Object> getExtraData() {
-        return extraData;
-    }
-
-    public void setExtraData(Map<String, Object> extraData) {
-        this.extraData = extraData;
-    }
-
-    // GETTERS AND SETTERS
-    public ArrayList<DateTime> getDatetimeList() {
-        return datetimeList;
-    }
-
-    public void updateToday() {
-        today = CalendarUtils.convertDateToDateTime(new Date());
-    }
-
-    protected DateTime getToday() {
+    private DateTime getToday() {
         if (today == null) {
             today = CalendarUtils.convertDateToDateTime(new Date());
         }
         return today;
-    }
-
-    /**
-     * Retrieve internal parameters from caldroid data
-     */
-    @SuppressWarnings("unchecked")
-    private void populateFromCaldroidData() {
-        this.datetimeList = CalendarUtils.getFullWeeks(this.month, this.year,
-                SUNDAY, true);
     }
 
 }

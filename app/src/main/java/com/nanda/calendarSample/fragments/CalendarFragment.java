@@ -15,10 +15,14 @@ import com.nanda.calendarSample.R;
 import com.nanda.calendarSample.adapter.MonthListAdapter;
 import com.nanda.calendarSample.adapter.MonthPagerAdapter;
 import com.nanda.calendarSample.app.AppConstants;
+import com.nanda.calendarSample.app.AppController;
+import com.nanda.calendarSample.app.MainThreadBus;
 import com.nanda.calendarSample.data.entity.EventsItem;
+import com.nanda.calendarSample.data.eventbus.CalendarEvent;
 import com.nanda.calendarSample.helper.InfinitePagerAdapter;
 import com.nanda.calendarSample.helper.InfiniteViewPager;
 import com.nanda.calendarSample.utils.CalendarUtils;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +40,6 @@ import static com.nanda.calendarSample.app.AppConstants.MIN_DATE;
 import static com.nanda.calendarSample.app.AppConstants.MONTH;
 import static com.nanda.calendarSample.app.AppConstants.SELECTED_DATES;
 import static com.nanda.calendarSample.app.AppConstants.SIX_WEEKS_IN_CALENDAR;
-import static com.nanda.calendarSample.app.AppConstants.SQUARE_TEXT_VIEW_CELL;
 import static com.nanda.calendarSample.app.AppConstants.START_DAY_OF_WEEK;
 import static com.nanda.calendarSample.app.AppConstants.YEAR;
 import static com.nanda.calendarSample.app.AppConstants._MAX_DATE_TIME;
@@ -51,9 +54,10 @@ public class CalendarFragment extends DialogFragment implements MonthListAdapter
     @BindView(R.id.infinite_pager)
     InfiniteViewPager infinitePager;
 
-    private MonthPagerAdapter monthPagerAdapter;
+    private MonthPagerAdapter calenderMonthPagerAdapter;
     private List<MonthFragment> monthFragmentList;
     private DatePageChangeListener pageChangeListener;
+    private MainThreadBus bus;
 
     private int month = -1;
     private int year = -1;
@@ -103,6 +107,8 @@ public class CalendarFragment extends DialogFragment implements MonthListAdapter
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         retrieveInitialArgs();
+        bus = AppController.getInstance().getBus();
+        bus.register(this);
     }
 
     @Nullable
@@ -121,6 +127,21 @@ public class CalendarFragment extends DialogFragment implements MonthListAdapter
         refreshView();
     }
 
+    @Subscribe
+    public void onCalendarEvent(CalendarEvent event) {
+        if (event != null && event.getEventsItemMap() != null) {
+            setEventsItemMap(event.getEventsItemMap());
+            refreshEventsView();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (bus != null) {
+            bus.unregister(this);
+        }
+    }
 
     public int getMonth() {
         return month;
@@ -487,9 +508,9 @@ public class CalendarFragment extends DialogFragment implements MonthListAdapter
         // height correctly
         infinitePager.setDatesInMonth(dateInMonthsList);
 
-        // MonthPagerAdapter actually provides 4 real fragments. The
+        // CalenderMonthPagerAdapter actually provides 4 real fragments. The
         // InfinitePagerAdapter only recycles fragment provided by this
-        // MonthPagerAdapter
+        // CalenderMonthPagerAdapter
         final MonthPagerAdapter pagerAdapter = new MonthPagerAdapter(
                 getChildFragmentManager());
 
@@ -507,7 +528,7 @@ public class CalendarFragment extends DialogFragment implements MonthListAdapter
 //                    .setOnItemLongClickListener(getDateItemLongClickListener());
         }
 
-        // Setup InfinitePagerAdapter to wrap around MonthPagerAdapter
+        // Setup InfinitePagerAdapter to wrap around CalenderMonthPagerAdapter
         InfinitePagerAdapter infinitePagerAdapter = new InfinitePagerAdapter(
                 pagerAdapter);
 
@@ -563,56 +584,5 @@ public class CalendarFragment extends DialogFragment implements MonthListAdapter
             year = dateTime.getYear();
         }
     }
-
-
-    /**
-     * Save current state to bundle outState
-     *
-     * @param outState
-     * @param key
-     */
-    public void saveStatesToKey(Bundle outState, String key) {
-        outState.putBundle(key, getSavedStates());
-    }
-
-    /**
-     * Get current saved sates of the Caldroid. Useful for handling rotation.
-     * It does not need to save state of SQUARE_TEXT_VIEW_CELL because this
-     * may change on orientation change
-     */
-    public Bundle getSavedStates() {
-        Bundle bundle = new Bundle();
-        bundle.putInt(MONTH, month);
-        bundle.putInt(YEAR, year);
-
-        if (selectedDates != null && selectedDates.size() > 0) {
-            bundle.putStringArrayList(SELECTED_DATES,
-                    CalendarUtils.convertToStringList(selectedDates));
-        }
-
-        if (disableDates != null && disableDates.size() > 0) {
-            bundle.putStringArrayList(DISABLE_DATES,
-                    CalendarUtils.convertToStringList(disableDates));
-        }
-
-        if (minDateTime != null) {
-            bundle.putString(MIN_DATE, minDateTime.format("YYYY-MM-DD"));
-        }
-
-        if (maxDateTime != null) {
-            bundle.putString(MAX_DATE, maxDateTime.format("YYYY-MM-DD"));
-        }
-
-        bundle.putInt(START_DAY_OF_WEEK, startDayOfWeek);
-        bundle.putBoolean(SIX_WEEKS_IN_CALENDAR, sixWeeksInCalendar);
-
-        Bundle args = getArguments();
-        if (args != null && args.containsKey(SQUARE_TEXT_VIEW_CELL)) {
-            bundle.putBoolean(SQUARE_TEXT_VIEW_CELL, args.getBoolean(SQUARE_TEXT_VIEW_CELL));
-        }
-
-        return bundle;
-    }
-
 
 }

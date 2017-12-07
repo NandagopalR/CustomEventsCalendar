@@ -9,8 +9,11 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.nanda.calendarSample.R;
 import com.nanda.calendarSample.app.AppConstants;
+import com.nanda.calendarSample.app.AppController;
+import com.nanda.calendarSample.app.MainThreadBus;
 import com.nanda.calendarSample.base.BaseActivity;
 import com.nanda.calendarSample.data.entity.EventsItem;
+import com.nanda.calendarSample.data.eventbus.CalendarEvent;
 import com.nanda.calendarSample.fragments.CalendarFragment;
 
 import java.util.Calendar;
@@ -22,25 +25,19 @@ import hirondelle.date4j.DateTime;
 
 public class VerticalMonthActivity extends BaseActivity {
 
-    private CalendarFragment caldroidFragment;
-
     private Map<DateTime, EventsItem> eventsItemMap = new HashMap<>();
-
-    /**
-     * Save current states of the Caldroid here
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        // TODO Auto-generated method stub
-        super.onSaveInstanceState(outState);
-
-        if (caldroidFragment != null) {
-            caldroidFragment.saveStatesToKey(outState, "CALDROID_SAVED_STATE");
-        }
-    }
+    private MainThreadBus bus;
 
     public static Intent getCallingIntent(Context context) {
         return new Intent(context, VerticalMonthActivity.class);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (bus != null) {
+            bus.unregister(this);
+        }
     }
 
     @Override
@@ -49,11 +46,8 @@ public class VerticalMonthActivity extends BaseActivity {
         setContentView(R.layout.activity_vertical_calendar);
         ButterKnife.bind(this);
 
-        caldroidFragment = new CalendarFragment();
-
-        if (savedInstanceState != null) {
-            caldroidFragment.saveStatesToKey(savedInstanceState, "CALDROID_SAVED_STATE");
-        }
+        bus = AppController.getInstance().getBus();
+        bus.register(this);
 
         eventsItemMap.put(new DateTime(2017, 10, 1, 0, 0, 0, 0), new EventsItem(false, false, false, true, false));
         eventsItemMap.put(new DateTime(2017, 10, 8, 0, 0, 0, 0), new EventsItem(false, false, false, false, true));
@@ -66,12 +60,11 @@ public class VerticalMonthActivity extends BaseActivity {
         eventsItemMap.put(new DateTime(2017, 11, 4, 0, 0, 0, 0), new EventsItem(false, false, false, true, false));
         eventsItemMap.put(new DateTime(2017, 11, 9, 0, 0, 0, 0), new EventsItem(false, false, false, true, false));
 
-        caldroidFragment.setEventsItemMap(eventsItemMap);
-        setFragment(caldroidFragment);
+        setFragment(new CalendarFragment());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                caldroidFragment.refreshEventsView();
+                bus.post(new CalendarEvent(eventsItemMap));
             }
         }, 500);
 
