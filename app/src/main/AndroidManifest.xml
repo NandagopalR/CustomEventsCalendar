@@ -21,6 +21,7 @@
         <activity android:name=".activity.VerticalMonthActivity" />
         <activity android:name=".activity.HorizontalMonthActivity" />
         <activity android:name=".activity.MonthNameActivity" />
+        <activity android:name=".activity.MonthNameMultiselectActivity" />
 
     </application>
 

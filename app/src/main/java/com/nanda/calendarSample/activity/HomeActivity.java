@@ -23,7 +23,8 @@ public class HomeActivity extends BaseActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.month_calendar_vertical, R.id.month_calendar_horizontal, R.id.month_name_calendar_horizontal})
+    @OnClick({R.id.month_calendar_vertical, R.id.month_calendar_horizontal,
+            R.id.month_name_calendar_horizontal, R.id.month_name_calendar_multiselect})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.month_calendar_vertical:
@@ -34,6 +35,9 @@ public class HomeActivity extends BaseActivity {
                 break;
             case R.id.month_name_calendar_horizontal:
                 startActivity(MonthNameActivity.getCallingIntent(this));
+                break;
+            case R.id.month_name_calendar_multiselect:
+                startActivity(MonthNameMultiselectActivity.getCallingIntent(this));
                 break;
         }
     }
