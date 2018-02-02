@@ -1,6 +1,8 @@
 package com.nanda.calendarSample.data.mapper;
 
 import com.nanda.calendarSample.data.entity.CalendarMonthItem;
+import com.nanda.calendarSample.data.entity.CalenderMonthMultiSelectItem;
+import com.nanda.calendarSample.data.entity.MonthDayItem;
 import com.nanda.calendarSample.data.entity.MonthItem;
 import com.nanda.calendarSample.utils.CalendarUtils;
 
@@ -30,6 +32,22 @@ public class MonthMapper {
             List<DateTime> dateTimeList = CalendarUtils.getFullWeeks(i, year, 1, true);
             String id = String.format("%d-%d", i, year);
             calendarMonthItemList.add(new CalendarMonthItem(id, year, i, dateTimeList));
+        }
+
+        return calendarMonthItemList;
+    }
+
+    public static List<CalenderMonthMultiSelectItem> convertModelToMonthMultiSelectEntityList(int year) {
+        List<CalenderMonthMultiSelectItem> calendarMonthItemList = new ArrayList<>();
+        for (int i = 1; i < 13; i++) {
+            List<MonthDayItem> dateList=new ArrayList<>();
+            List<DateTime> dateTimeList = CalendarUtils.getFullWeeks(i, year, 1, true);
+            for (DateTime item :dateTimeList) {
+                dateList.add(new MonthDayItem(item,false));
+
+            }
+            String id = String.format("%d-%d", i, year);
+            calendarMonthItemList.add(new CalenderMonthMultiSelectItem(id, year, i, dateList));
         }
 
         return calendarMonthItemList;

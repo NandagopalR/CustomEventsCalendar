@@ -45,12 +45,8 @@ public class CalenderMultiselectMonthFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public void setDateTimeList(List<DateTime> dateTimeList, int month, int year) {
-        this.dateTimeList = new ArrayList<>(dateTimeList.size());
-//        this.dateTimeList = dateTimeList;
-        for (DateTime item : dateTimeList) {
-            this.dateTimeList.add(new MonthDayItem(item, false));
-        }
+    public void setDateTimeList(List<MonthDayItem> dateTimeList, int month, int year) {
+        this.dateTimeList = dateTimeList;
         currentMonth = month;
         currentYear = year;
     }
@@ -66,7 +62,6 @@ public class CalenderMultiselectMonthFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        getDatesBtn.setVisibility(View.VISIBLE);
         adapter = new MonthListMultiselectAdapter(getContext(), currentMonth, currentYear);
         adapter.updateToday();
         recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 7));

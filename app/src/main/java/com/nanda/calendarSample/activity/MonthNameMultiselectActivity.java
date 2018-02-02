@@ -6,13 +6,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.nanda.calendarSample.R;
 import com.nanda.calendarSample.activity.monthpager.MonthAdapter;
-import com.nanda.calendarSample.adapter.CalendarMonthPagerAdapter;
 import com.nanda.calendarSample.adapter.CalenderMonthMultiSelectPagerAdapter;
 import com.nanda.calendarSample.base.BaseActivity;
-import com.nanda.calendarSample.data.entity.CalendarMonthItem;
+import com.nanda.calendarSample.data.entity.CalenderMonthMultiSelectItem;
+import com.nanda.calendarSample.data.entity.MonthDayItem;
 import com.nanda.calendarSample.data.entity.MonthItem;
 import com.nanda.calendarSample.data.mapper.MonthMapper;
 
@@ -23,6 +26,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by HP-PC on 02-02-2018.
@@ -35,9 +39,11 @@ public class MonthNameMultiselectActivity extends BaseActivity {
     ViewPager pager;
     @BindView(R.id.viewpager)
     ViewPager monthPager;
+    @BindView(R.id.select_date)
+    Button selectDate;
 
     private List<MonthItem> monthList;
-    private List<CalendarMonthItem> calendarMonthItemList;
+    private List<CalenderMonthMultiSelectItem> calendarMonthItemList;
 
     private MonthAdapter adapter;
     private CalenderMonthMultiSelectPagerAdapter pagerAdapter;
@@ -57,7 +63,7 @@ public class MonthNameMultiselectActivity extends BaseActivity {
         Calendar calendar = Calendar.getInstance();
         curYear = calendar.get(Calendar.YEAR);
         curMonth = (calendar.get(Calendar.MONTH) + 1);
-
+        selectDate.setVisibility(View.VISIBLE);
         adapter = new MonthAdapter(getSupportFragmentManager());
         pagerAdapter = new CalenderMonthMultiSelectPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
@@ -74,14 +80,15 @@ public class MonthNameMultiselectActivity extends BaseActivity {
                 if (position == 0) {
                     Log.e(TAG, "" + position);
                     int currentYear = calendarMonthItemList.get(position).getYear();
-                    List<CalendarMonthItem> prevMonthList = MonthMapper.convertModelToMonthEntityList(currentYear - 1);
+                    List<CalenderMonthMultiSelectItem> prevMonthList = MonthMapper.convertModelToMonthMultiSelectEntityList
+                            (currentYear - 1);
 
                     int prevMonthYear = prevMonthList.get(0).getYear();
 
                     if (prevMonthYear == currentYear)
                         return;
 
-                    List<CalendarMonthItem> currentMonthList = new ArrayList<>();
+                    List<CalenderMonthMultiSelectItem> currentMonthList = new ArrayList<>();
                     currentMonthList.addAll(calendarMonthItemList);
 
                     calendarMonthItemList.clear();
@@ -97,9 +104,10 @@ public class MonthNameMultiselectActivity extends BaseActivity {
                         }
                     }, 200);
                 } else if (position > (calendarMonthItemList.size() - 5)) {
-                    CalendarMonthItem selectedItem = calendarMonthItemList.get(position);
+                    CalenderMonthMultiSelectItem selectedItem = calendarMonthItemList.get(position);
                     int currentYear = calendarMonthItemList.get(calendarMonthItemList.size() - 5).getYear();
-                    List<CalendarMonthItem> nextMonthsList = MonthMapper.convertModelToMonthEntityList(currentYear + 1);
+                    List<CalenderMonthMultiSelectItem> nextMonthsList = MonthMapper
+                            .convertModelToMonthMultiSelectEntityList(currentYear + 1);
 
                     int nextMonthYear = nextMonthsList.get(0).getYear();
 
@@ -197,7 +205,7 @@ public class MonthNameMultiselectActivity extends BaseActivity {
             }
         });
         monthList = getCurrentMonths(curYear);
-        calendarMonthItemList = MonthMapper.convertModelToMonthEntityList(curYear);
+        calendarMonthItemList = MonthMapper.convertModelToMonthMultiSelectEntityList(curYear);
         adapter.setDateTimeList(monthList);
         pagerAdapter.setCalendarMonthItemList(calendarMonthItemList);
 
@@ -210,5 +218,20 @@ public class MonthNameMultiselectActivity extends BaseActivity {
         DateFormatSymbols symbols = new DateFormatSymbols();
         List<MonthItem> monthList = MonthMapper.convertModelToEntityList(symbols.getMonths(), year);
         return monthList;
+    }
+
+    @OnClick(R.id.select_date)
+    public void onViewClicked() {
+        List<String> selectedDateList = new ArrayList<>();
+        for (CalenderMonthMultiSelectItem montItem : calendarMonthItemList) {
+            for (MonthDayItem item : montItem.getDateTimeList()) {
+                if (item.isSelected())
+                    selectedDateList.add(String.format("%d-%d-%d", item.getDateTime().getDay(),
+                            item.getDateTime().getMonth(), item.getDateTime().getYear()));
+            }
+
+        }
+        Toast.makeText(getApplicationContext(), selectedDateList.toString().replaceAll("\\[", "")
+                .replaceAll("\\]", ""), Toast.LENGTH_LONG).show();
     }
 }

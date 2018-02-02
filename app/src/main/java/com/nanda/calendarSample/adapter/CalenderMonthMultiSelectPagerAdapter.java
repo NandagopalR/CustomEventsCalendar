@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.nanda.calendarSample.data.entity.CalendarMonthItem;
+import com.nanda.calendarSample.data.entity.CalenderMonthMultiSelectItem;
+import com.nanda.calendarSample.data.entity.MonthDayItem;
 import com.nanda.calendarSample.fragments.CalendarMonthFragment;
 import com.nanda.calendarSample.fragments.CalenderMultiselectMonthFragment;
 
@@ -19,14 +21,14 @@ import hirondelle.date4j.DateTime;
 
 public class CalenderMonthMultiSelectPagerAdapter extends FragmentPagerAdapter {
 
-    private List<CalendarMonthItem> calendarMonthItemList;
+    private List<CalenderMonthMultiSelectItem> calendarMonthItemList;
 
     public CalenderMonthMultiSelectPagerAdapter(FragmentManager fm) {
         super(fm);
         calendarMonthItemList = new ArrayList<>();
     }
 
-    public void setCalendarMonthItemList(List<CalendarMonthItem> itemList) {
+    public void setCalendarMonthItemList(List<CalenderMonthMultiSelectItem> itemList) {
         if (itemList == null) {
             return;
         }
@@ -41,7 +43,7 @@ public class CalenderMonthMultiSelectPagerAdapter extends FragmentPagerAdapter {
         }
 
         for (int i = 0, calendarMonthItemListSize = calendarMonthItemList.size(); i < calendarMonthItemListSize; i++) {
-            CalendarMonthItem item = calendarMonthItemList.get(i);
+            CalenderMonthMultiSelectItem item = calendarMonthItemList.get(i);
             if (item.getId().equals(id)) {
                 return i;
             }
@@ -51,8 +53,8 @@ public class CalenderMonthMultiSelectPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        CalendarMonthItem item = calendarMonthItemList.get(position);
-        List<DateTime> dateTimeList = item.getDateTimeList();
+        CalenderMonthMultiSelectItem item = calendarMonthItemList.get(position);
+        List<MonthDayItem> dateTimeList = item.getDateTimeList();
         int month = item.getMonth();
         int year = item.getYear();
         CalenderMultiselectMonthFragment fragment = new CalenderMultiselectMonthFragment();

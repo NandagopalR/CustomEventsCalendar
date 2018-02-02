@@ -67,16 +67,17 @@ public class MonthListMultiselectAdapter extends RecyclerView.Adapter<MonthListM
         datetimeList.addAll(datetimeItemList);
         notifyDataSetChanged();
     }
-    public String getSelectedDate() {
-        List<String> selectedDates=new ArrayList<>();
 
-        for (MonthDayItem item :datetimeList) {
-            if(item.isSelected())
+    public String getSelectedDate() {
+        List<String> selectedDates = new ArrayList<>();
+
+        for (MonthDayItem item : datetimeList) {
+            if (item.isSelected())
                 selectedDates.add(String.format("%d-%d-%d", item.getDateTime().getDay(),
                         item.getDateTime().getMonth(), item.getDateTime().getYear()));
         }
 
-        return selectedDates.toString().replaceAll("\\[", "").replaceAll("\\]","");
+        return selectedDates.toString().replaceAll("\\[", "").replaceAll("\\]", "");
     }
 
 
@@ -199,6 +200,8 @@ public class MonthListMultiselectAdapter extends RecyclerView.Adapter<MonthListM
 //            }
 //            mSelectedItem = position;
             MonthDayItem item = datetimeList.get(position);
+            if (item.getDateTime().getMonth() != month)
+                return;
             if (item.isSelected())
                 item.setSelected(false);
             else item.setSelected(true);
