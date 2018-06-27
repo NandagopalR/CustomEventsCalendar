@@ -24,7 +24,8 @@ public class HomeActivity extends BaseActivity {
     }
 
     @OnClick({R.id.month_calendar_vertical, R.id.month_calendar_horizontal,
-            R.id.month_name_calendar_horizontal, R.id.month_name_calendar_multiselect})
+            R.id.month_name_calendar_horizontal, R.id.month_name_calendar_multiselect, R.id.compact_calender
+            , R.id.new_month_calender})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.month_calendar_vertical:
@@ -38,6 +39,12 @@ public class HomeActivity extends BaseActivity {
                 break;
             case R.id.month_name_calendar_multiselect:
                 startActivity(MonthNameMultiselectActivity.getCallingIntent(this));
+                break;
+            case R.id.compact_calender:
+                startActivity(CompactCalendarActivity.getCallingIntent(this));
+                break;
+            case R.id.new_month_calender:
+                startActivity(NewMonthActivity.getCallingIntent(this));
                 break;
         }
     }

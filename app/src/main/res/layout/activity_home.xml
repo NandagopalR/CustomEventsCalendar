@@ -25,11 +25,26 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="Monthly Name Calendar - Horizontal" />
+
     <Button
         android:id="@+id/month_name_calendar_multiselect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="Monthly Name Calendar (Multi select)" />
+
+    <Button
+        android:id="@+id/compact_calender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Compact Calendar" />
+
+    <Button
+        android:id="@+id/new_month_calender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="New Month Calendar" />
 
 </LinearLayout>

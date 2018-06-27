@@ -10,12 +10,29 @@ public class CalendarMonthItem {
     private int month;
     private String id;
     private List<DateTime> dateTimeList;
+    private String monthYearName;
 
     public CalendarMonthItem(String id, int year, int month, List<DateTime> dateTimeList) {
         this.id = id;
         this.year = year;
         this.month = month;
         this.dateTimeList = dateTimeList;
+    }
+
+    public CalendarMonthItem(String id, int year, int month, List<DateTime> dateTimeList, String monthYearName) {
+        this.id = id;
+        this.year = year;
+        this.month = month;
+        this.dateTimeList = dateTimeList;
+        this.monthYearName = monthYearName;
+    }
+
+    public String getMonthYearName() {
+        return monthYearName;
+    }
+
+    public void setMonthYearName(String monthYearName) {
+        this.monthYearName = monthYearName;
     }
 
     public String getId() {
